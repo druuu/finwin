@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -115,10 +116,15 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-
+######################################### staticfiles ##########################################
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+################################################################################################
 
 
 ############ celery ##################
@@ -127,7 +133,7 @@ CELERY_BROKER_URL = 'amqp://guest:guest@localhost//'
 #: Only add pickle to this list if your broker is secured
 #: from unwanted access (see userguide/security.html)
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_RESULT_BACKEND = 'db+sqlite:///results.sqlite'
+#CELERY_RESULT_BACKEND = 'db+sqlite:///results.sqlite'
 CELERY_TASK_SERIALIZER = 'json'
 #####################################
 
@@ -149,3 +155,6 @@ LOGGING = {
     },
 }
 ###########################################################
+
+TOTAL_NOTEBOOKS = 10
+DOMAIN = 'druuu.me'

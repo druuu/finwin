@@ -3,5 +3,5 @@ from .views import *
 
 urlpatterns = [
     #re_path('^health', health, name='health'),
-    re_path('^demo', demo, name='demo'),
+    re_path('^notebook', notebook, name='notebook'),
 ]
