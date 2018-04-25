@@ -9,7 +9,7 @@
 
 int create_file(char *argv[]) {
     FILE *fp;
-    char buffer[500];
+    char buffer[800];
 
     char path[100] = "/home/";
     strcat(path, argv[2]);
@@ -30,7 +30,9 @@ int create_file(char *argv[]) {
             "        \"Content-Security-Policy\": \"frame-ancestors 'self' *\"\n"
             "    }\n"
             "}\n"
-            "c.NotebookApp.iopub_data_rate_limit=10000000000;\n", argv[1], argv[3], argv[2]);
+            "c.NotebookApp.iopub_data_rate_limit=10000000000;\n"
+            "c.NotebookApp.certfile = '%s'\n"
+            "c.NotebookApp.keyfile = '%s'\n", argv[1], argv[3], argv[2], argv[4], argv[5]);
 
     fprintf(fp, "%s", buffer);
     fclose(fp);

@@ -8,6 +8,10 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from app.models import Notebook
 
+
+CERTFILE = settings.BASE_DIR + '/scripts/fullchain.pem' 
+KEYFILE = settings.BASE_DIR + '/scripts/privkey.pem'
+
 class Command(BaseCommand):
     def listening(self, port):
         count = 0
@@ -32,7 +36,7 @@ class Command(BaseCommand):
         time2 = int(time.time())
         heartbeat = time2 + 60
         notebook = Notebook.objects.create(username=username, port=port2, base_url=base_url, status=0, time2=time2, heartbeat=heartbeat)
-        cmd = '%s/scripts/launch_jupyter.o %d %s %s &' % (settings.BASE_DIR, port2, username, base_url)
+        cmd = '%s/scripts/launch_jupyter.o %d %s %s %s %s &' % (settings.BASE_DIR, port2, username, base_url, CERTFILE, KEYFILE)
         check_call(cmd, shell=True)
         if self.listening(port2):
             notebook.status = 1

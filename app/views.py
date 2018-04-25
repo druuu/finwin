@@ -7,7 +7,15 @@ from app.models import *
 def notebook(request):
     notebook = Notebook.objects.filter(lock=False).first()
     if notebook:
-        url = 'http://%s:%d/%s' % (settings.DOMAIN, notebook.port, notebook.base_url)
+        url = 'https://%s:%d/%s' % (settings.DOMAIN, notebook.port, notebook.base_url)
         notebook.lock = True
         notebook.save()
         return HttpResponseRedirect(url)
+
+
+def heartbeat(request):
+    username = request.GET['username']
+    notebook = Notebook.objects.get(username=username)
+    notebook.heartbeat = request.GET['timestamp']
+    notebook.save()
+    return HttpResponse('ok')
