@@ -161,3 +161,6 @@ TOTAL_NOTEBOOKS = 10
 DOMAIN = 'druuu.me'
 
 STRICTREDIS = StrictRedis(unix_socket_path='/var/run/redis/redis.sock')
+
+HEARTBEAT_DIR = '/root/notebook/heartbeat'
+APP_DIR = '/usr/local/share/jupyter/lab'

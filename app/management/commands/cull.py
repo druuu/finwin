@@ -1,26 +1,32 @@
 import time
+import os
 import pwd
 from subprocess import check_call
+from pathlib import Path
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
-from app.models import Notebook
 
 class Command(BaseCommand):
-    def cull2(self, notebook):
+    def cull2(self, username):
         try:
-            pwd.getpwnam(notebook.username)
-            cmd = 'pkill -u %s; sleep 2 && pkill -9 -u %s; userdel -r %s' % (notebook.username, notebook.username, notebook.username)
+            pwd.getpwnam(username)
+            cmd = 'pkill -u %s; sleep 2 && pkill -9 -u %s; userdel -r %s' % (username, username, username)
             check_call(cmd, shell=True)
         except KeyError:
-            print('User %s does not exist.' % notebook.username)
+            print('User %s does not exist.' % username)
     
     def handle(self, *args, **options):
         while True:
-            notebooks = Notebook.objects.all()
-            for notebook in notebooks:
-                if int(time.time()) - notebook.heartbeat > 60:
-                    username = notebook.username
-                    self.cull2(notebook)
-                    notebook.delete()
-            time.sleep(2)   
+            usernames = os.listdir('/home')
+            values = settings.STRICTREDIS.lrange('server', 0, -1)
+            for username in usernames:
+                username2 = username.encode()
+                if not any([username2 in i for i in values]):
+                    path2 = settings.HEARTBEAT_DIR + '/' + username
+                    if not os.path.isfile(path2):
+                        Path(path2).touch()
+                    elif int(time.time()) - int(os.path.getmtime(path2)) > 60:
+                        os.remove(path2)
+                        self.cull2(username)
+            time.sleep(2)

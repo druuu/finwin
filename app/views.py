@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 
 from django.shortcuts import render
 from django.http.response import HttpResponse, HttpResponseRedirect
@@ -7,23 +8,13 @@ from app.models import *
 
 
 def notebook(request):
-    diff = int(time.time()) - 50
-    #notebook = Notebook.objects.filter(lock=False, heartbeat__gte=diff).first()
-    url = settings.STRICTREDIS.lpop('server')
-    print('urllllllllllllllllllllllllllllllllll:', url)
-    return HttpResponseRedirect(url)
-    #if notebook:
-    #    url = 'https://%s:%d/%s' % (settings.DOMAIN, notebook.port, notebook.base_url)
-    #    notebook.lock = True
-    #    notebook.save()
-    #    return HttpResponseRedirect(url)
-    #    #return render(request, 'app/notebook.html', {'url': url, 'url2': '/heartbeat?username='+notebook.username})
-    #return HttpResponse('The servers are all occupied, please try again after sometime.')
+    return HttpResponseRedirect(settings.STRICTREDIS.lpop('server'))
 
 
 def heartbeat(request):
     username = request.GET['username']
-    notebook = Notebook.objects.get(username=username)
-    notebook.heartbeat = int(time.time())
-    notebook.save()
+    Path(settings.HEARTBEAT_DIR + '/' + username, exist_ok=True).touch()
     return HttpResponse('ok')
+
+def none(request):
+    return HttpResponse('the servers are all occupied, please try after sometime.')

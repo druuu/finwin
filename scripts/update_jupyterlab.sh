@@ -52,3 +52,5 @@ cp -r "$tmpdir" "$dstdir" &&
 
 rm -r "$dstdir2"/static &&
 cp -r "$tmpdir2"/static "$dstdir2"/static
+
+#TODO: copy ssl files to jupyter directory
