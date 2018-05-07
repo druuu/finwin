@@ -5,8 +5,8 @@ import subprocess
 #from django.conf import settings
 
 
-HEARTBEAT_DIR = '/home/filtered/heartbeat'
-LOGS_DIR = '/home/filtered/logs'
+HEARTBEAT_DIR = '/root/filtered/heartbeat'
+LOGS_DIR = '/root/filtered/logs'
 def cull():
     now = time.time()
     files = os.listdir(HEARTBEAT_DIR)
