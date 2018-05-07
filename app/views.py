@@ -12,8 +12,8 @@ def notebook(request):
         url = 'https://%s:%d/%s' % (settings.DOMAIN, notebook.port, notebook.base_url)
         notebook.lock = True
         notebook.save()
-        #return HttpResponseRedirect(url)
-        return render(request, 'app/notebook.html', {'url': url, 'url2': '/heartbeat?username='+notebook.username})
+        return HttpResponseRedirect(url)
+        #return render(request, 'app/notebook.html', {'url': url, 'url2': '/heartbeat?username='+notebook.username})
 
 
 def heartbeat(request):
