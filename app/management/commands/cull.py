@@ -19,7 +19,8 @@ class Command(BaseCommand):
         while True:
             notebooks = Notebook.objects.all()
             for notebook in notebooks:
-                if int(time.time()) - notebook.heartbeat > 30:
+                if int(time.time()) - notebook.heartbeat > 60:
+                    username = notebook.username
                     self.cull2(notebook)
                     notebook.delete()
             time.sleep(2)   
