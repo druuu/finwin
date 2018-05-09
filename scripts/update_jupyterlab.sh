@@ -54,3 +54,5 @@ rm -r "$dstdir2"/static &&
 cp -r "$tmpdir2"/static "$dstdir2"/static
 
 #TODO: copy ssl files to jupyter directory
+#TODO: add domain name in src link in index.html, for lab notebooks
+#TODO: add domain name in src link in notebook.html, for classic notebooks, also in nginx
