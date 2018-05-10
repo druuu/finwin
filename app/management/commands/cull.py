@@ -27,6 +27,9 @@ class Command(BaseCommand):
                     if not os.path.isfile(path2):
                         Path(path2).touch()
                     elif int(time.time()) - int(os.path.getmtime(path2)) > 60:
+                        info = '%d, %d, %s, %s\n' % (int(time.time()), int(os.path.getmtime(path2)), path2, username)
+                        with open('/var/log/cull.log', 'a') as f:
+                            f.write(info)
                         os.remove(path2)
                         self.cull2(username)
             time.sleep(2)
