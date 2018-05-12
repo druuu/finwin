@@ -21,15 +21,14 @@ class Command(BaseCommand):
             usernames = os.listdir('/home')
             values = settings.STRICTREDIS.lrange('server', 0, -1)
             for username in usernames:
-                username2 = username.encode()
-                if not any([username2 in i for i in values]):
-                    path2 = settings.HEARTBEAT_DIR + '/' + username
-                    if not os.path.isfile(path2):
-                        Path(path2).touch()
-                    elif int(time.time()) - int(os.path.getmtime(path2)) > 60:
-                        info = '%d, %d, %s, %s\n' % (int(time.time()), int(os.path.getmtime(path2)), path2, username)
-                        with open('/var/log/cull.log', 'a') as f:
-                            f.write(info)
-                        os.remove(path2)
-                        self.cull2(username)
+                #it takes upto 10sec to push username to queue, so wait for 10sec
+                if int(time.time()) - int(os.path.getmtime('/home/'+username)) > 10:
+                    username2 = username.encode()
+                    if not any([username2 in i for i in values]):
+                        path2 = settings.HEARTBEAT_DIR + '/' + username
+                        if not os.path.isfile(path2):
+                            Path(path2).touch()
+                        elif int(time.time()) - int(os.path.getmtime(path2)) > 60:
+                            os.remove(path2)
+                            self.cull2(username)
             time.sleep(2)
