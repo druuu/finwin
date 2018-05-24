@@ -35,7 +35,7 @@ class Command(BaseCommand):
         cmd = '%s/scripts/launch_jupyter.o %d %s %s %s %s &' % (settings.BASE_DIR, port2, username, base_url, CERTFILE, KEYFILE)
         check_call(cmd, shell=True)
         if self.listening(port2):
-            settings.STRICTREDIS.lpush('server', 'https://%s:%d/%s' % (settings.DOMAIN, port2, username))
+            settings.STRICTREDIS.lpush('server', 'https://%s:%d/%s/lab' % (settings.DOMAIN, port2, username))
         #else:
         #    #notebook.status = 2
         #    #notebook.time3 = int(time.time())
