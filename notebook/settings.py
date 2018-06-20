@@ -158,7 +158,8 @@ LOGGING = {
 ###########################################################
 
 TOTAL_NOTEBOOKS = 10
-DOMAIN = 'finwin.io'
+TOTAL_VMS = 30
+DOMAIN = 'finplane.com'
 
 STRICTREDIS = StrictRedis(unix_socket_path='/var/run/redis/redis.sock')
 
