@@ -25,8 +25,8 @@ class Command(BaseCommand):
             stdout_logfile = /var/log/supervisor/%s.log
             logfile_maxbytes = 5MB
             logfile_backups = 10
-            directory = /home/notebook/notebook/scripts
-            command = /home/notebook/env/bin/python3 vm.py %s
+            directory = /home/notebook/notebook
+            command = /home/notebook/env/bin/python3 manage.py manage_vm %s
             ''' % (server, server, server_suffix)
 
         with open('/etc/supervisor/conf.d/vm.conf', 'w') as f:

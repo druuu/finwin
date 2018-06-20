@@ -8,7 +8,9 @@ from app.models import *
 
 
 def notebook(request):
-    return HttpResponseRedirect(settings.STRICTREDIS.lpop('server'))
+    url = settings.STRICTREDIS.lpop('server')
+    print(url)
+    return HttpResponseRedirect(url)
 
 
 def heartbeat(request):
