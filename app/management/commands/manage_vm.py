@@ -3,19 +3,45 @@ import os
 import sys
 import subprocess
 from pathlib import Path
-from shutil import copyfile
-import textwrap
+from multiprocessing import Process
 import socket
 from contextlib import closing
+import uuid
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 
-class Command(BaseCommand):
-    #def add_arguments(self, parser):
-    #    parser.add_argument('server_suffix', type=str)
 
+def notebook_server_started(vm_host, vm_port, url):
+    count = 0
+    while count < 10:
+        count += 1
+        with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
+            print('notebookkkkkkkkkkkkkk', count)
+            if sock.connect_ex((vm_host, int(vm_port))) == 0:
+                return True
+        time.sleep(1)
+    print('errrrrrrrrrrrrrrrrrrrrrrrr', url)
+    return False
+
+def push_to_redis_on_listening(vm_host, vm_port, url, base_url):
+    count = 0
+    while count < 10:
+        count += 1
+        with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
+            print('sshhhhhhhhhhhhhhhhhhhhh', count)
+            if sock.connect_ex((vm_host, 22)) == 0:
+                cmd = """ssh -o StrictHostKeyChecking=no %s 'echo c.NotebookApp.base_url=\\"%s\\" >> ~/.jupyter/jupyter_notebook_config.py && supervisorctl start notebook'""" % (vm_host, base_url)
+                print(cmd)
+                subprocess.check_call(cmd, shell=True)
+                if notebook_server_started(vm_host, vm_port, url):
+                    print(url, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+                    settings.STRICTREDIS.lpush('server', url)
+                return
+        time.sleep(1)
+
+class Command(BaseCommand):
     def running(self, server):
         try:
             output = subprocess.check_output('virsh domstate '+server, shell=True)
@@ -25,92 +51,55 @@ class Command(BaseCommand):
             if b'running' in output:
                 return True
     
-    def install_vm(self, server, img_path, mac, url, host, port):
-        #path3 = Path(img_path)
-        #if path3.exists():
-        #    path3.unlink()
-        #copyfile(base_img_path, img_path)        
-        #cmd = 'virt-install --name %s --os-variant=ubuntu16.04 --ram 2048 --vcpus 2 --disk path=%s --import --noautoconsole --network network=default,mac=%s' % (server, img_path, mac)
-        #cmd = 'virt-clone --name %s --mac %s --original bnbs --file %s' % (server, mac, img_path)
-        #if self.running(server):
-        #    cmd = 'virsh reboot ' + server
-        #else:
-        #    cmd = 'virsh start ' + server
-        cmd = 'virsh reboot ' + server
+    def reset(self, server):
+        if self.running(server):
+            cmd = 'virsh destroy %s && virsh start %s' % (server, server)
+        else:
+            cmd = 'virsh start %s' % (server)
         subprocess.check_call(cmd, shell=True)
-        #if self.listening(host, port): 
-        settings.STRICTREDIS.lpush('server', url)
-    
-    def reset(self, server, img_path, mac, url, host, port):
-        values = settings.STRICTREDIS.lrange('server', 0, -1)
-        print(values)
-        print(url.encode())
-        if not url.encode() in values:
-            #subprocess.check_call('virsh destroy '+server, shell=True)
-            #subprocess.check_call('virsh undefine '+server, shell=True)
-            self.install_vm(server, img_path, mac, url, host, port)
-            #subprocess.check_call('virsh start '+server, shell=True)
-    
-    def run(self, server, img_path, mac, url, host, port):
-        #try:
-        #    subprocess.check_call('virsh domstate '+server, shell=True)
-        #except subprocess.CalledProcessError:
-        #    pass
-        #else:
-        #    subprocess.check_call('virsh undefine '+server, shell=True)
-        self.install_vm(server, img_path, mac, url, host, port)
-        #subprocess.check_call('virsh start '+server, shell=True)
-    
-    def server_off(self, server):
-        for i in range(10):
-            if self.running(server):
-                return False
-            time.sleep(1)
-        return False
 
-    def listening(self, host, port):
-        port = int(port)
-        count = 0
-        while count < 10:
-            count += 1
-            with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
-                if sock.connect_ex((host, port)) == 0:
-                    return True
-            time.sleep(1)
-    
     def handle(self, *args, **options):
-        heartbeat_path = '/home/notebook/heartbeat'
-        server_suffixes = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10']
-        ports = {'01': '8888', '02': '8889', '03': '8890', '04': '8891', '05': '8892', '06': '8893', '07': '8894', '08': '8895', '09': '8896', '10': '8897'}
+        ports = {'01': '8888', '02': '8889', '03': '8890', '04': '8891', '05': '8892', '06': '8893', \
+                '07': '8894', '08': '8895', '09': '8896', '10': '8897', '11': '8898', '12': '8899', \
+                '13': '8900', '14': '8901', '15': '8902', '16': '8903', '17': '8904', '18': '8905', \
+                '19': '8906', '20': '8907', '21': '8908', '22': '8909', '23': '8910', '24': '8911', \
+                '25': '8912', '26': '8913', '27': '8914', '28': '8915', '29': '8916', '30': '8917'}
+        vm_port = '8888'
+        death_note = {}
         while True:
-            print('-------------------------------------------------------')
-            for server_suffix in server_suffixes:
+            print('--------------------------------------------')
+            urls = settings.STRICTREDIS.lrange('server', 0, -1)
+            urls = [b'/'.join(i.split(b'/')[:-1]) for i in urls]
+            for i in range(settings.TOTAL_VMS):
+                if i < 9:
+                    server_suffix = '0%d' % (i+1)
+                else:
+                    server_suffix = '%d' % (i+1)
                 server = 'nbs' + server_suffix
-                print('######### '+server+' ############')
-                mac = '52:54:00:6c:3c:' + server_suffix
-                base_img_path = '/home/kvm/base_images/b' + server + '.img'
-                img_path = '/home/kvm/images/' + server + '.img'
-                host = 'finplane.com'
+                vm_host = settings.PARTIAL_IP + server_suffix
                 port = ports[server_suffix]
-                url = 'http://' + host + ':' + port
-                path2 = heartbeat_path + '/' + server
-                if self.running(server):
+                base_url = uuid.uuid4().hex
+                url = ('http://' + settings.DOMAIN + ':' + port + '/' + base_url).encode()
+                url2 = ('http://' + settings.DOMAIN + ':' + port).encode()
+                path2 = settings.HEARTBEAT_DIR + '/' + server
+                if not url2 in urls:
                     if Path(path2).exists():
                         diff = time.time() - os.path.getmtime(path2)
-                        print(diff)
-                        if diff > 60:
-                            self.reset(server, img_path, mac, url, host, port)
-                            Path(path2).touch()
+                        if diff > settings.TIMEOUT:
+                            self.reset(server)
+                            Path(path2).unlink()
+                            if server in death_note:
+                                del death_note[server]
+                            Process(target=push_to_redis_on_listening, args=(vm_host, vm_port, url, base_url)).start()
                     else:
-                        self.reset(server, img_path, mac, url, host, port)
-                        Path(path2).touch()
-                else:
-                    self.run(server, img_path, mac, url, host, port)
-                    Path(path2).touch()
-            
-                if self.server_off(server):
-                    print('ERROR: server not running')
-                    sys.exit(1)
-
-            print('-------------------------------------------------------')
-            time.sleep(1)
+                        #file doesn't exists, so write it in death_note, and kill after its time exceeds
+                        if server in death_note:
+                            if death_note.get(server) > 5:
+                                self.reset(server)
+                                del death_note[server]
+                                Process(target=push_to_redis_on_listening, args=(vm_host, vm_port, url, base_url)).start()
+                            else:
+                                death_note[server] += 1
+                        else:
+                            death_note[server] = 1
+            time.sleep(3)

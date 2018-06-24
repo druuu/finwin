@@ -1,0 +1,1166 @@
+upstream django {
+    server unix:///var/run/notebook.sock;
+}
+
+server {
+    listen       80;
+    server_name  finplane.com;
+    return       301 https://finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location / {
+        uwsgi_pass django;
+        include uwsgi_params;
+    }
+}
+
+
+
+####################### start 101 #################################
+server {
+    listen       80;
+    server_name  101.finplane.com;
+    return       301 https://101.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  101.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.101:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.101:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 101 #################################
+
+####################### start 102 #################################
+server {
+    listen       80;
+    server_name  102.finplane.com;
+    return       301 https://102.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  102.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.102:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.102:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 102 #################################
+
+####################### start 103 #################################
+server {
+    listen       80;
+    server_name  103.finplane.com;
+    return       301 https://103.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  103.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.103:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.103:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 103 #################################
+
+####################### start 104 #################################
+server {
+    listen       80;
+    server_name  104.finplane.com;
+    return       301 https://104.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  104.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.104:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.104:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 104 #################################
+
+####################### start 105 #################################
+server {
+    listen       80;
+    server_name  105.finplane.com;
+    return       301 https://105.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  105.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.105:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.105:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 105 #################################
+
+####################### start 106 #################################
+server {
+    listen       80;
+    server_name  106.finplane.com;
+    return       301 https://106.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  106.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.106:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.106:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 106 #################################
+
+####################### start 107 #################################
+server {
+    listen       80;
+    server_name  107.finplane.com;
+    return       301 https://107.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  107.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.107:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.107:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 107 #################################
+
+####################### start 108 #################################
+server {
+    listen       80;
+    server_name  108.finplane.com;
+    return       301 https://108.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  108.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.108:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.108:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 108 #################################
+
+####################### start 109 #################################
+server {
+    listen       80;
+    server_name  109.finplane.com;
+    return       301 https://109.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  109.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.109:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.109:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 109 #################################
+
+####################### start 110 #################################
+server {
+    listen       80;
+    server_name  110.finplane.com;
+    return       301 https://110.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  110.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.110:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.110:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 110 #################################
+
+####################### start 111 #################################
+server {
+    listen       80;
+    server_name  111.finplane.com;
+    return       301 https://111.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  111.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.111:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.111:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 111 #################################
+
+####################### start 112 #################################
+server {
+    listen       80;
+    server_name  112.finplane.com;
+    return       301 https://112.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  112.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.112:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.112:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 112 #################################
+
+####################### start 113 #################################
+server {
+    listen       80;
+    server_name  113.finplane.com;
+    return       301 https://113.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  113.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.113:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.113:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 113 #################################
+
+####################### start 114 #################################
+server {
+    listen       80;
+    server_name  114.finplane.com;
+    return       301 https://114.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  114.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.114:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.114:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 114 #################################
+
+####################### start 115 #################################
+server {
+    listen       80;
+    server_name  115.finplane.com;
+    return       301 https://115.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  115.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.115:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.115:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 115 #################################
+
+####################### start 116 #################################
+server {
+    listen       80;
+    server_name  116.finplane.com;
+    return       301 https://116.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  116.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.116:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.116:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 116 #################################
+
+####################### start 117 #################################
+server {
+    listen       80;
+    server_name  117.finplane.com;
+    return       301 https://117.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  117.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.117:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.117:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 117 #################################
+
+####################### start 118 #################################
+server {
+    listen       80;
+    server_name  118.finplane.com;
+    return       301 https://118.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  118.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.118:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.118:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 118 #################################
+
+####################### start 119 #################################
+server {
+    listen       80;
+    server_name  119.finplane.com;
+    return       301 https://119.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  119.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.119:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.119:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 119 #################################
+
+####################### start 120 #################################
+server {
+    listen       80;
+    server_name  120.finplane.com;
+    return       301 https://120.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  120.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.120:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.120:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 120 #################################
+
+####################### start 121 #################################
+server {
+    listen       80;
+    server_name  121.finplane.com;
+    return       301 https://121.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  121.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.121:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.121:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 121 #################################
+
+####################### start 122 #################################
+server {
+    listen       80;
+    server_name  122.finplane.com;
+    return       301 https://122.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  122.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.122:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.122:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 122 #################################
+
+####################### start 123 #################################
+server {
+    listen       80;
+    server_name  123.finplane.com;
+    return       301 https://123.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  123.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.123:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.123:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 123 #################################
+
+####################### start 124 #################################
+server {
+    listen       80;
+    server_name  124.finplane.com;
+    return       301 https://124.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  124.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.124:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.124:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 124 #################################
+
+####################### start 125 #################################
+server {
+    listen       80;
+    server_name  125.finplane.com;
+    return       301 https://125.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  125.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.125:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.125:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 125 #################################
+
+####################### start 126 #################################
+server {
+    listen       80;
+    server_name  126.finplane.com;
+    return       301 https://126.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  126.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.126:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.126:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 126 #################################
+
+####################### start 127 #################################
+server {
+    listen       80;
+    server_name  127.finplane.com;
+    return       301 https://127.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  127.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.127:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.127:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 127 #################################
+
+####################### start 128 #################################
+server {
+    listen       80;
+    server_name  128.finplane.com;
+    return       301 https://128.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  128.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.128:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.128:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 128 #################################
+
+####################### start 129 #################################
+server {
+    listen       80;
+    server_name  129.finplane.com;
+    return       301 https://129.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  129.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.129:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.129:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 129 #################################
+
+####################### start 130 #################################
+server {
+    listen       80;
+    server_name  130.finplane.com;
+    return       301 https://130.finplane.com$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name  130.finplane.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    ssl_certificate /etc/letsencrypt/live/finplane.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/finplane.com/privkey.pem;
+
+    location ~* "^/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?" {
+        proxy_pass http://192.168.122.130:8888;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location / {
+        proxy_pass http://192.168.122.130:8888/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 60;
+        proxy_send_timeout 15;
+        proxy_read_timeout 20;
+    }
+}
+####################### end 130 #################################

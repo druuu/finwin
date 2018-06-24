@@ -160,8 +160,10 @@ LOGGING = {
 TOTAL_NOTEBOOKS = 10
 TOTAL_VMS = 30
 DOMAIN = 'finplane.com'
+TIMEOUT = 30
+PARTIAL_IP = '192.168.122.1'
 
 STRICTREDIS = StrictRedis(unix_socket_path='/var/run/redis/redis.sock')
 
-HEARTBEAT_DIR = '/root/notebook/heartbeat'
+HEARTBEAT_DIR = '/home/notebook/heartbeat'
 APP_DIR = '/usr/local/share/jupyter/lab'
