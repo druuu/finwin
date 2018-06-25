@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django_celery_beat',
 ]
 
+AUTH_USER_MODEL = 'app.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -108,14 +110,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
 
 USE_L10N = True
-
-USE_TZ = True
-
 
 ######################################### staticfiles ##########################################
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
@@ -158,12 +155,15 @@ LOGGING = {
 ###########################################################
 
 TOTAL_NOTEBOOKS = 10
-TOTAL_VMS = 30
+TOTAL_VMS = 3
+TIMEOUT = 60
 DOMAIN = 'finplane.com'
-TIMEOUT = 30
 PARTIAL_IP = '192.168.122.1'
 
 STRICTREDIS = StrictRedis(unix_socket_path='/var/run/redis/redis.sock')
 
 HEARTBEAT_DIR = '/home/notebook/heartbeat'
 APP_DIR = '/usr/local/share/jupyter/lab'
+SESSION_COOKIE_HTTPONLY = False
+
+from notebook.settings2 import *

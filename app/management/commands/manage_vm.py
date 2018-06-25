@@ -7,9 +7,12 @@ from multiprocessing import Process
 import socket
 from contextlib import closing
 import uuid
+import datetime
 
 from django.core.management.base import BaseCommand, CommandError
+from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
+from app.models import VM
 
 
 
@@ -32,7 +35,9 @@ def push_to_redis_on_listening(vm_host, vm_port, url, base_url):
         with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
             print('sshhhhhhhhhhhhhhhhhhhhh', count)
             if sock.connect_ex((vm_host, 22)) == 0:
-                cmd = """ssh -o StrictHostKeyChecking=no %s 'echo c.NotebookApp.base_url=\\"%s\\" >> ~/.jupyter/jupyter_notebook_config.py && supervisorctl start notebook'""" % (vm_host, base_url)
+                cmd = """ssh -o StrictHostKeyChecking=no %s 'echo c.NotebookApp.base_url=\\"%s\\" \
+                        >> ~/.jupyter/jupyter_notebook_config.py && supervisorctl start \
+                        notebook'""" % (vm_host, base_url)
                 print(cmd)
                 subprocess.check_call(cmd, shell=True)
                 if notebook_server_started(vm_host, vm_port, url):
@@ -83,23 +88,28 @@ class Command(BaseCommand):
                 url2 = ('http://' + settings.DOMAIN + ':' + port).encode()
                 path2 = settings.HEARTBEAT_DIR + '/' + server
                 if not url2 in urls:
-                    if Path(path2).exists():
-                        diff = time.time() - os.path.getmtime(path2)
-                        if diff > settings.TIMEOUT:
-                            self.reset(server)
-                            Path(path2).unlink()
-                            if server in death_note:
-                                del death_note[server]
-                            Process(target=push_to_redis_on_listening, args=(vm_host, vm_port, url, base_url)).start()
-                    else:
-                        #file doesn't exists, so write it in death_note, and kill after its time exceeds
+                    try:
+                        print(VM.objects.all())
+                        print('#################################')
+                        vm = VM.objects.get(port=port)
+                        print('ininininininini')
+                    except ObjectDoesNotExist:
                         if server in death_note:
                             if death_note.get(server) > 5:
                                 self.reset(server)
                                 del death_note[server]
-                                Process(target=push_to_redis_on_listening, args=(vm_host, vm_port, url, base_url)).start()
+                                Process(target=push_to_redis_on_listening, \
+                                        args=(vm_host, vm_port, url, base_url)).start()
                             else:
                                 death_note[server] += 1
                         else:
                             death_note[server] = 1
+                    else:
+                        if (datetime.datetime.now()-vm.last_modified).total_seconds() > settings.TIMEOUT:
+                            self.reset(server)
+                            vm.delete()
+                            if server in death_note:
+                                del death_note[server]
+                            Process(target=push_to_redis_on_listening, \
+                                    args=(vm_host, vm_port, url, base_url)).start()
             time.sleep(3)
