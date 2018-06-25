@@ -9,4 +9,5 @@ urlpatterns = [
     re_path('^signup', signup, name='signup'),
     re_path('^save', save, name='save'),
     re_path('^$', index, name='index'),
+    #re_path('^get_nb$', get_nb, name='get_nb'),
 ]

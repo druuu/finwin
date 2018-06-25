@@ -1,6 +1,7 @@
 import time
 from pathlib import Path
 from urllib import parse
+from io import BytesIO
 
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
@@ -13,6 +14,17 @@ from django.views.decorators.csrf import csrf_exempt
 
 from app.models import *
 from app.forms import *
+
+
+#def get_nb_urls(user):
+#    user_data = settings.DB.user_data.find(filter={'id': user.id})
+#    nb_urls = []
+#    for doc in user_data:
+#        nb_url = doc.get('nb_url')
+#        if nb_url:
+#            nb_url = 'https://' + settings.DOMAIN + '/get_nb?my_url=' + nb_url
+#            nb_urls.append(nb_url)
+#    return nb_urls
 
 
 def index(request):
@@ -48,6 +60,7 @@ def signup(request):
 @login_required
 def notebook(request):
     nb_url = request.GET['url']
+    nb_url = parse.quote_plus(nb_url)
     try:
         vm = VM.objects.get(user=request.user)
     except ObjectDoesNotExist:
@@ -123,3 +136,17 @@ def heartbeat(request):
 
 def none(request):
     return HttpResponse('the servers are all occupied, please try after sometime.')
+
+
+#@login_required
+#def get_nb(request):
+#    nb_url = request.GET['my_url']
+#    nbs = settings.DB.user_data.find({'id': request.user.id, 'nb_url': nb_url})
+#    nb = next(nbs, None)
+#    if nb:
+#        nb = nb.get('notebook')
+#        if nb:
+#            resp = HttpResponse(nb, content_type="text/plain")
+#            resp['Content-Disposition'] = 'attachment; filename=untitled.ipynb'
+#            return resp
+#    return HttpResponse(status=404)
